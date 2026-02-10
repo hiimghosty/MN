@@ -13,7 +13,7 @@ X = np.zeros(n)
 P =X.copy()
 m = 10
 tol = 1e-2
-###NECESARIAMENTE PARA GAUSS SIEDEL NECESITAMOS UNA MATRIZ DIAGONAL
+###NECESARIAMENTE PARA GAUSS SIEDEL NECESITAMOS UNA MATRIZ DIAGONALMENTE DOMINANTE
 ###########Rutina 003###########
 for i in range(m):
     for j in range(n):
