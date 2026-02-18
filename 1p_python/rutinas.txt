@@ -1,4 +1,5 @@
-###########Rutina 001###########
+##RUTINAS PARA RESOLVER Ax=b
+###########Rutina 001########### ##GAUSS
 if np.abs(np.linalg.det(A)) < delta: #Segun CHATGPT no es buen criterio para detectar matriz singular
         print('el sistema no tiene solucion o tiene infinitas soluciones')
 else:
@@ -26,7 +27,7 @@ X[n-1] = C[-1, -1] / C[n-1, n-1]
 for i in range(n-2, -1, -1):
     X[i] = (C[i, -1] - C[i, i+1:n].dot(X[i+1:n])) / C[i, i]
 
-###########Rutina 002########### 
+###########Rutina 002###########  ##JACOBI
 for i in range(m):
     for j in range(n):
         X[j] = (B[j] - A[j, np.delete(np.arange(n), j) ].dot(P[np.delete(np.arange(n), j) ])) / A[j, j] #segun chatgpt el np.delete es caro
@@ -40,7 +41,7 @@ for i in range(m):
 
 
 
-###########Rutina 003###########
+###########Rutina 003########### ##GAUS SIEDEL
 for i in range(m):
     for j in range(n):
         X[j] = (B[j] - A[j, np.delete(np.arange(n), j) ].dot(X[np.delete(np.arange(n), j) ])) / A[j, j]
@@ -51,3 +52,59 @@ for i in range(m):
         break
     else:
         P = X.copy()
+
+
+ ##RUTINAS PARA HALLAR Os
+###################################################
+################RUTINA004##########################
+for i in range(n):
+ c=(a+b)/2
+ err=np.abs(c0-c)
+ relerr=np.abs(err/c)
+ if tol>err or tol>relerr or tol>np.abs(f(c)):
+   break
+ else:
+   if f(a)*f(c)<0:
+     b=c
+   else:
+     a=c
+ c0=c
+################RUTINA005##########################
+for i in range(n):
+ c=(b*f(a)-a*f(b))/(f(a)-f(b))
+ err=np.abs(c0-c)
+ relerr=np.abs(err/c)
+ if tol>err or tol>relerr or tol>np.abs(f(c)):
+   break
+ else:
+   if f(a)*f(c)<0:
+     b=c
+   else:
+     a=c
+ c0=c
+################RUTINA006##########################
+for i in range(n):
+ p=p0-f(p0)/df(p0)
+ err=jnp.abs(p-p0)
+ relerr=jnp.abs(err/p)
+ if tol>err or tol>relerr or tol>jnp.abs(f(p)):
+   break
+ p0=p
+################RUTINA007##########################
+for i in range(n):
+ p=g(p0)
+ err=np.abs(p-p0)
+ relerr=np.abs(err/p)
+ if tol>err or tol>relerr or tol>np.abs(f(p)):
+   break
+ p0=p
+################RUTINA008##########################
+for i in range(n):
+ x2=(x1*f(x0)-x0*f(x1))/(f(x0)-f(x1))
+ err=np.abs(x2-x1)
+ relerr=np.abs(err/x2)
+ if tol>err or tol>relerr or tol>np.abs(f(x2)):
+   break
+ x0=x1
+ x1=x2
+###################################################

@@ -51,3 +51,6 @@ saldo_metal_kg = saldo_metal_g / 1000.0
 print("\nProducción real (enteros) [x1, x2, x3] =", x_int)
 print(f"Metal usado: {metal_usado_g:.0f} g")
 print(f"Saldo de METAL: {saldo_metal_kg:.6f} kg  (positivo=sobra, negativo=falta)")
+
+
+print(A[0][:] @ x_int)
