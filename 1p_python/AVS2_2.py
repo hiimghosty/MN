@@ -2,15 +2,15 @@ import numpy as np
 
 
 def f(x):
-    return 18.67 * np.exp(x - 6.2) - 802
+    return 18.66 * np.exp(x - 6) - 803
 
 
 def g(x):
-    return x**3.32 + 4.5 * x - 802
+    return x**3.31 + 4.51 * x - 803
 
 
 def h(x):
-    return 13.51 * (x**2.1) - 802
+    return 13.5 * (x**2) - 803
 
 
 # Evaluamos quién llega (Bolzano)
@@ -21,7 +21,7 @@ n = 100
 
 # === RUTINA MOVIL B ===
 a = 0.0
-b = 9.2
+b = 9.1
 c0 = a
 for i in range(n):
     c = (b * g(a) - a * g(b)) / (g(a) - g(b))
@@ -74,12 +74,12 @@ difTiempos = np.abs(tiempoB - tiempoC)
 print(f"Ítem 3: Diferencia de tiempos entre 1ro y 2do: {difTiempos:.6f} minutos")
 
 
-# RESPUESTA 4: Velocidad del segundo (Asumiendo que es B)
-def velocidadB(x):
-    return 3.32 * (x**2.32) + 4.5
+# RESPUESTA 4: Velocidad del segundo (Asumiendo que es C)
+def velocidadC(x):
+    return 27 * x
 
 
-print(f"Ítem 4: Velocidad del 2do lugar 4 min antes: {velocidadB(tiempoB - 4):.6f}")
+print(f"Ítem 4: Velocidad del 2do lugar 4 min antes: {velocidadC(tiempoC - 4):.6f}")
 
 # RESPUESTA 5: Distancia del más atrasado (Móvil A) a los 9.2 minutos
 # Distancia a la meta = Meta(802) - DistanciaRecorrida(9.2)
@@ -116,3 +116,5 @@ tiempo_extra = tiempoA - 9.2
 print(
     f"Ítem 6: El tiempo límite debe extenderse mínimamente {tiempo_extra:.6f} minutos"
 )
+# Este ultimo item muy probablemente les salga mal, eso es debido a que la tolerancia es de 10^-2
+# Pero te piden 6 decimales, lo cual no tiene el mas minimo sentido
