@@ -56,7 +56,7 @@ for i in range(m):
 
  ##RUTINAS PARA HALLAR Os
 ###################################################
-################RUTINA004##########################
+################RUTINA004########################## # BISECCION
 for i in range(n):
  c=(a+b)/2
  err=np.abs(c0-c)
@@ -69,7 +69,7 @@ for i in range(n):
    else:
      a=c
  c0=c
-################RUTINA005##########################
+################RUTINA005########################## #FALSA POSICION
 for i in range(n):
  c=(b*f(a)-a*f(b))/(f(a)-f(b))
  err=np.abs(c0-c)
