@@ -82,7 +82,7 @@ for i in range(n):
    else:
      a=c
  c0=c
-################RUTINA006##########################
+################RUTINA006########################## #NEWTON RHAPSON
 for i in range(n):
  p=p0-f(p0)/df(p0)
  err=jnp.abs(p-p0)
@@ -90,7 +90,7 @@ for i in range(n):
  if tol>err or tol>relerr or tol>jnp.abs(f(p)):
    break
  p0=p
-################RUTINA007##########################
+################RUTINA007########################## #PUNTO FIJO, NECESITA F(X) Y G(X) (DESPEJANDO UNA X)
 for i in range(n):
  p=g(p0)
  err=np.abs(p-p0)
@@ -98,7 +98,7 @@ for i in range(n):
  if tol>err or tol>relerr or tol>np.abs(f(p)):
    break
  p0=p
-################RUTINA008##########################
+################RUTINA008########################## #METODO SECANTE
 for i in range(n):
  x2=(x1*f(x0)-x0*f(x1))/(f(x0)-f(x1))
  err=np.abs(x2-x1)
