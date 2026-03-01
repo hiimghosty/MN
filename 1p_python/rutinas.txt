@@ -108,3 +108,16 @@ for i in range(n):
  x0=x1
  x1=x2
 ###################################################
+################RUTINA008########################## #NEWTON RHAPSON MULTI DIMENSIONAL
+for i in range(m):
+    F=sistema(P0)
+    J=jacob_sist(P0)
+    deltaP=jnp.linalg.solve(J,-F)
+    P=P0+deltaP
+    err=jnp.linalg.norm(P-P0)
+    relerr=err/jnp.linalg.norm(P)
+    F_norm=jnp.linalg.norm(sistema(P))
+    if tol>err or tol>relerr or tol>F_norm:
+        break
+    else:
+        P0=P.copy()
