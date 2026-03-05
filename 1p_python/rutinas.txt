@@ -108,7 +108,7 @@ for i in range(n):
  x0=x1
  x1=x2
 ###################################################
-################RUTINA008########################## #NEWTON RHAPSON MULTI DIMENSIONAL
+################RUTINA009########################## #NEWTON RHAPSON MULTI DIMENSIONAL
 for i in range(m):
     F=sistema(P0)
     J=jacob_sist(P0)
