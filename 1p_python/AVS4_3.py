@@ -35,7 +35,9 @@ for i in range(m):
 
 
 y_pred = P[0] * jnp.log(jnp.abs(x_dat)) + P[1]
-SS_tot = jnp.sum((y_dat - jnp.mean(y_dat)) ** 2)
+SS_tot = jnp.sum(
+    (y_dat - jnp.mean(y_dat)) ** 2
+)  # estaria bueno ver un ejemplo de caundo esto sea util
 SS_res = jnp.sum((y_dat - y_pred) ** 2)
 R2 = 1 - (SS_res / SS_tot)
 

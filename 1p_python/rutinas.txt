@@ -52,7 +52,7 @@ for i in range(m):
         break
     else:
         P = X.copy()
-
+print('P:\n',P)
 
  ##RUTINAS PARA HALLAR Os
 ###################################################
@@ -121,3 +121,32 @@ for i in range(m):
         break
     else:
         P0=P.copy()
+################RUTINA010########################## #Creo que es la prediccion nm
+y_pred = (K_opt[0] * x_data + K_opt[1]) ** (-2)
+y_mean = jnp.mean(y_data)
+yp_mean = jnp.mean(y_pred)
+num = jnp.sum((y_data - y_mean) * (y_pred - yp_mean))
+den = jnp.sqrt(
+    jnp.sum((y_data - y_mean)**2) *
+    jnp.sum((y_pred - yp_mean)**2)
+)
+r = num / den
+###################################################
+################RUTINA011########################## #A LA VERGA ESTE TB
+v=np.vander(x,N=m,increasing=True)
+a=np.linalg.solve(v,y)
+################RUTINA012########################## #LAGRANGE
+for i in range(n):
+ a=np.delete(np.arange(n),i)
+ p=np.poly1d([1,-x[a[0]]])
+ for j in range(1,n-1):
+  p=np.polymul(p,np.poly1d([1,-x[a[j]]]))
+ P+=y[i]*p/p(x[i])
+################RUTINA013########################## #INTERPOLACION DE NEWTON
+for i in range(1,n):
+ a=(y[i]-P(x[i]))/p(x[i])
+ P+=a*p
+ p=np.polymul(p,np.poly1d([1,-x[i]]))
+###################################################
+
+    
