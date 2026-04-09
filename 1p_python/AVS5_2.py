@@ -32,6 +32,11 @@ for i in range(m):
 
 print("P(2.5) =", yp)
 
+densidadReal = 999.952
+errorrelativo = (yp - densidadReal) / densidadReal
+
+print(f"b) Error relativo {errorrelativo:0.6f}")
+
 
 def f(t):
     s = 0.0
