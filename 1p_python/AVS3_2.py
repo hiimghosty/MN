@@ -35,7 +35,7 @@ P0 = jnp.array([10, 10, 10], dtype=float)  # DATO DEL PROBLEMA
 tol = 1e-3
 m = 50
 jacob_sist = jacfwd(sistema)
-################RUTINA008########################## #NEWTON RHAPSON MULTI DIMENSIONAL
+################RUTINA009########################## #NEWTON RHAPSON MULTI DIMENSIONAL
 for i in range(m):
     F = sistema(P0)
     J = jacob_sist(P0)
