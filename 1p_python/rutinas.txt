@@ -192,3 +192,91 @@ d2y=(f(x)-2f(x-h)+f(x-2h))/h^2
 d2y=(2f(x)-5 f(x-h)+4f(x-2h)-f(x-3h))/h^2 
 d3y=(f(x)-3f(x-h)+3f(x-2h)-f(x-3h))/h^3 
 d3y=(5f(x)-18f(x-h)+24f(x-2h)-14f(x-3h)+3f(x-4h))/(2*h^3 )
+# EC DIF
+###################################################
+################RUTINA020##########################
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x=x0
+for i in range(n):
+    dy=A(x)@y0+B(x)
+    y=y0+h*dy
+    y0=y.copy()
+    x+=h
+################RUTINA021##########################
+########MANUAL##########
+def dy(x, y):
+    return 2*x*y
+
+def d2y(x, y):
+    # (dy)'_x + (dy)'_y * dy
+    return grad(dy, argnums=0)(x, y) + grad(dy, argnums=1)(x, y) * dy(x, y)
+
+def d3y(x, y):
+    # (dy)'_x + (dy)'_y * dy
+    return grad(d2y, argnums=0)(x, y) + grad(d2y, argnums=1)(x, y) * dy(x, y)
+
+
+
+for i in range(0, n):
+    f1  = dy(x0, y0)
+    f2  = d2y(x0, y0)
+    f3  = d3y(x0, y0)
+    y1  = y0 + f1*h + f2/2 * h**2+(f3*h**3)/6
+    x1  = x0 + h
+    yr  = np.exp(x1**2)
+    err = abs(y1 - yr)
+    y0  = y1
+    x0  = x1
+    
+
+###########GENERALIZADO##############
+df=[f]
+for i in range(n):
+    df.append(sp.diff(df[i],'x')+sp.diff(df[i],'y')*f)
+
+R=np.array(([y0]),dtype=float)
+x_=x0
+y_=y0
+for j in range(m):
+    for i in range(n+1):
+        y_+=df[i].subs({x:x_,y:y0})*h**(i+1)/math.factorial(i+1)
+    x_+=h
+    y0=y_
+################RUTINA022##########################
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x=x0
+for i in range(n):
+    dy1=A(x)@y0+B(x)
+    y1=y0+h*dy1
+    x+=h
+    dy2=A(x)@y1+B(x)
+    y=y0+(h/2)*(dy1+dy2)
+    y0=y.copy()
+################RUTINA023##########################
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x=x0
+for i in range(n):
+    dy0=A(x)@y0+B(x)
+    x+=h/2
+    y1=y0+(h/2)*dy0
+    dy1=A(x)@y1+B(x)
+
+    y2=y0+(h/2)*dy1
+    dy2=A(x)@y2+B(x)
+
+    x+=h/2
+    y3=y0+h*dy2
+    dy3=A(x)@y3+B(x)
+
+    y=y0+(h/6)*(dy0+2*dy1+2*dy2+dy3)
+    y0=y.copy()
+###################################################
