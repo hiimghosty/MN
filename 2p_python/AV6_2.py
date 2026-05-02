@@ -29,16 +29,14 @@ def determinarK(a, b, n):
 
 
 def areaPorSimpson(a, b, n):
-    ################RUTINA015########################## # SIMPSON 1/3
-    A = 0.0
+    ################RUTINA015########################## ## REGLA DE SIMPSON 1/3
     h = (b - a) / n
-    for xi in np.arange(a, b, 2 * h):
-        A = A + (h / 3) * (
-            polinomioVerdadero(xi)
-            + 4 * polinomioVerdadero(xi + h)
-            + polinomioVerdadero(xi + 2 * h)
-        )
-
+    A = 0
+    y = f(np.linspace(a, b, n + 1))
+    k = 0
+    while k < n:
+        A += (h / 3) * (y[k] + 4 * y[k + 1] + y[k + 2])
+        k += 2
     return A
 
 
@@ -59,6 +57,7 @@ print(f"El valor de k es: {k:0.6f}")
 # 5*x^2+(2*k+10)*x+2*k+31 sea igual a 100
 coefVerdaderos = np.array([5, (2 * k + 10), (2 * k + 31)], dtype=float)
 polinomioVerdadero = np.poly1d(coefVerdaderos)
+f = polinomioVerdadero
 Areaverdadera = areaPorSimpson(puntoA, puntoB, n)
 print(f"El area para esa k es: {Areaverdadera:0.6f}")
 # ERROR REAL EN EL AREA
