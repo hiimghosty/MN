@@ -30,10 +30,15 @@ f = P
 a = tiempo[0]
 b = tiempo[len(tiempo) - 1]
 n = 30  # dato del problema
-################RUTINA015########################## # SIMPSON 1/3
+################RUTINA015########################## ## REGLA DE SIMPSON 1/3
 h = (b - a) / n
-for xi in np.arange(a, b, 2 * h):
-    A = A + (h / 3) * (f(xi) + 4 * f(xi + h) + f(xi + 2 * h))
+A = 0
+y = f(np.linspace(a, b, n + 1))
+k = 0
+while k < n:
+    A += (h / 3) * (y[k] + 4 * y[k + 1] + y[k + 2])
+    k += 2
+
 
 print(f"b) El Area bajo la curva es es:  {A:0.6f}")
 

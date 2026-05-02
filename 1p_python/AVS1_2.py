@@ -1,24 +1,32 @@
 ##SEMANA 2 AULA VIRTUAL
 import numpy as np
-np.set_printoptions(precision=6, suppress=True) #Pide 6 decimales y sin formato exponencial
 
-A = np.array([
-    [25, 12,  7],   # Metal:   
-    [ 4, 12,  3],   # Plastico: 
-    [15, 12, 34]    # Caucho:  
-], dtype=float)
+np.set_printoptions(
+    precision=6, suppress=True
+)  # Pide 6 decimales y sin formato exponencial
+
+A = np.array(
+    [
+        [25, 12, 7],  # Metal:
+        [4, 12, 3],  # Plastico:
+        [15, 12, 34],  # Caucho:
+    ],
+    dtype=float,
+)
 
 B = np.array([9440, 5710, 14890], dtype=float)
 
 tol = 1e-2
 m = 50
 n = len(B)
-X= np.zeros(n)
+X = np.zeros(n)
 P = X.copy()
-###########Rutina 002########### 
+###########Rutina 002###########
 for i in range(m):
     for j in range(n):
-        X[j] = (B[j] - A[j, np.delete(np.arange(n), j) ].dot(P[np.delete(np.arange(n), j) ])) / A[j, j] #segun chatgpt el np.delete es caro
+        X[j] = (
+            B[j] - A[j, np.delete(np.arange(n), j)].dot(P[np.delete(np.arange(n), j)])
+        ) / A[j, j]  # segun chatgpt el np.delete es caro
     err = np.linalg.norm(X - P)
     normX = np.linalg.norm(X)
     relerr = err / normX
@@ -28,7 +36,9 @@ for i in range(m):
         P = X.copy()
 
 print(X)
-print(f"Error absoluto {err:.6f}") #la opcion setprintoptions solo controla elementos de numpy, por ended este formateo es el mejor para forzar 6 decimales de precision
+print(
+    f"Error absoluto {err:.6f}"
+)  # la opcion setprintoptions solo controla elementos de numpy, por ended este formateo es el mejor para forzar 6 decimales de precision
 print(f"Error relativo {relerr:.6f}")
 
 ## para ver cantidades de metal
