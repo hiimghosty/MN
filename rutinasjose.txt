@@ -1,0 +1,774 @@
+###################################################
+################LIBRERIAS##########################
+import numpy as np
+import matplotlib.pyplot as plt
+import jax.numpy as jnp
+from jax import jacfwd, grad
+################GRAFICO##########################
+x=np.linspace(a,b,n)
+plt.plot(x,f(x))
+plt.show()	
+###################################################
+################RUTINA001-Eliminacion Gaussiana##########################
+#
+#Qué hace: Halla la solución exacta del sistema de ecuación por medio de
+escalonamiento.
+#A: Matriz de coeficientes
+#B: Vector columna de los términos del otro lado de la igualdad del S.E lineal
+#C: Matriz ampliada A con B
+#delta: Tolerancia para comparar números que se acerquen al cero
+#n: Orden de la matriz de coeficientes
+
+#rutina: 
+if np.abs(np.linalg.det(A)) < delta:
+        print('el sistema no tiene solucion o tiene infinitas soluciones')
+else:
+    n=A.shape[0]
+    j = -1
+    i = n - 1 
+    while j < n-2:
+        if i == n - 1:
+            j += 1
+            i = j
+            subcol = np.abs(C[j:, j])
+            t = np.argmax(subcol)         
+            pibot = subcol[t]
+            if delta > pibot:
+                print('el sistema no tiene solucion o tiene infinitas soluciones')
+            else:
+                aux=C[j,:].copy()
+                C[j,:]=C[t+j,:]
+                C[t+j,:]=aux.copy()
+        i += 1
+        k = C[i, j] / C[j, j]
+        C[i, j:] -= k * C[j, j:]
+X=np.zeros((n,1),dtype=float)
+X[n-1] = C[-1, -1] / C[n-1, n-1]
+for i in range(n-2, -1, -1):
+    X[i] = (C[i, -1] - C[i, i+1:n].dot(X[i+1:n])) / C[i, i]
+################RUTINA002-Gauss Jacobi##########################
+#
+#Qué hace: Halla los valores aproximados de las variables del S.E lineal.
+#A: Matriz de coeficientes.
+# Condición para usar la rutina: Matriz A debe ser diagonal dominante (El ejercicio
+podría darte una matriz genérica.
+y uno debe de encargarse de volverlo diagonal dominante mediante el intercambio de filas
+o columnas).
+#B: Vector columna de los términos independientes despejados del S.E lineal.
+#P: Punto de partida necesario (Se dan los valores en el enunciado del ejercicio).
+#X: Vector que le va a contener a la solución aproximada y se inicializa con sus elementos
+iguales a cero.
+#rutina: 
+for i in range(m):
+    for j in range(n):          
+        X[j] = (B[j] - A[j, np.delete(np.arange(n), j) ].dot(P[np.delete(np.arange(n), j) ])) / A[j, j]
+    err = np.linalg.norm(X - P)
+    normX = np.linalg.norm(X)
+    relerr = err / normX
+    if tol > err or tol > relerr:
+        break
+    else:
+        P = X.copy()
+################RUTINA003-Gauss Seidel##########################
+#
+#Qué hace: Halla los valores aproximados de las variables del S.E lineal.
+#A: Matriz de coeficientes.
+#Condicion para usar la rutina: Matriz A debe ser diagonal dominante (Generalmente el
+ejercicio suele condicionar que se haga exclusivamente intercambio de columnas para
+que A sea diagonal dominante).
+#B: Vector columna de los términos independientes despejados del S.E lineal.
+#P: Punto de partida necesario (Se dan los valores en el enunciado del ejercicio).
+#Inicialización de X: X=P.copy() en esta rutina a diferencia de la rutina con Jacobi que se
+inicializa con ceros.
+
+#rutina: 
+for i in range(m):
+    for j in range(n):          
+        X[j] = (B[j] - A[j, np.delete(np.arange(n), j) ].dot(X[np.delete(np.arange(n), j) ])) / A[j, j]
+    err = np.linalg.norm(X - P)
+    normX = np.linalg.norm(X)
+    relerr = err / normX
+    if tol > err or tol > relerr:
+        break
+    else:
+        P = X.copy()
+    print('P:\n',P)
+###################################################
+################RUTINA004-Biseccion##########################
+#
+#Qué hace: Halla la solución aproximada de una ecuación, es decir, f(x)=0.
+#Qué necesita: Intervalo [a,b] que le contenga a la solución, se obtiene analizando el
+gráfico de la función si no es condicionado en el ejercicio (Si el gráfico muestra más de
+una posible solución, elegir un intervalo que le contenga solamente a una de las
+soluciones ).
+#n: Tope de iteraciones.
+#tol: Tolerancia del ejercicio (debe ser condicionado en el enunciado).
+#c0: Se inicializa con el valor de a, es decir, c0=a.
+#rutina: 
+for i in range(n):
+ c=(a+b)/2
+ err=np.abs(c0-c)
+ relerr=np.abs(err/c)
+ if tol>err or tol>relerr or tol>np.abs(f(c)):
+   break
+ else:
+   if f(a)*f(c)<0:
+     b=c
+   else:
+     a=c
+ c0=c
+################RUTINA005-Falsa Posicion##########################
+#
+#Qué hace: Halla la solución aproximada de una ecuación, es decir, f(x)=0.
+#Qué necesita: Intervalo [a,b] que le contenga a la solución, se obtiene analizando el
+gráfico de la función si no es condicionado en el ejercicio (Si el gráfico muestra más de
+una posible solución, elegir un intervalo que le contenga solamente a una de las
+soluciones ).
+#n: Tope de iteraciones.
+#tol: Tolerancia del ejercicio (debe ser condicionado  en el enunciado).
+#c0: Se inicializa con el valor de a, es decir, c0=a.
+#turina: 
+for i in range(n):
+ c=(b*f(a)-a*f(b))/(f(a)-f(b))
+ err=np.abs(c0-c)
+ relerr=np.abs(err/c)
+ if tol>err or tol>relerr or tol>np.abs(f(c)):
+   break
+ else:
+   if f(a)*f(c)<0:
+     b=c
+   else:
+     a=c
+ c0=c
+################RUTINA006-Nwton-Rapson##########################
+#
+#Qué hace: Halla la solución aproximada de una ecuación, es decir, f(x)=0 usando la
+derivada de la función.
+#Qué necesita: Punto de partida "p0" que esté cercana a la solución buscada.
+#df: Es la derivada de la función f(x) de la cual se quiere hallar su solución.
+#n: Tope de iteraciones.
+#tol: Tolerancia del ejercicio (debe ser condicionado en el enunciado)
+#p0: Es un punto de partida que tiene estar próximo a la solución buscada (si no nos da el
+enunciado como dato se debe graficar la función para buscar un p0 cercano a la solución
+avistada).
+
+#turina: 
+for i in range(n):
+ p=p0-f(p0)/df(p0)
+ err=jnp.abs(p-p0)
+ relerr=jnp.abs(err/p)
+ if tol>err or tol>relerr or tol>jnp.abs(f(p)):
+   break
+ p0=p
+################RUTINA007-Punto fijo##########################
+#
+#Qué hace: Halla la solución aproximada de una ecuación, es decir, f(x)=0.
+#Que necesita: Una función g(x) tal que f(x)= g(x)-x = 0------>g(x)=x.
+#Ejemplo de obtención de g(x): f(x)=x^2-2x+1=0-----> x=(2x-1)^1/2=g(x) (se hace despeje
+de una x de la función a resolver, pueden haber más de un método de despeje).
+#Condición para uso de g(x): |g’(p0)|<1.
+#p0: Punto de partida (debe ser cercano a la solución buscada, si no da el ejercicio se
+hace análisis gráfico de la función f(x) ).
+#tol: Tolerancia del ejercicio (debe ser condicionado en el enunciado).
+#n: Tope de iteraciones.
+#rutina:
+for i in range(n):
+ p=g(p0)
+ err=np.abs(p-p0)
+ relerr=np.abs(err/p)
+ if tol>err or tol>relerr or tol>np.abs(f(p)):
+   break
+ p0=p
+################RUTINA008-Secante##########################
+#
+#Qué hace: Halla la solución aproximada de una ecuación, es decir, f(x)=0.
+#Qué necesita: Intervalo [x0,x1] que le contenga a la solución, se obtiene analizando el
+gráfico de la función si no es condicionado en el ejercicio (Si el gráfico muestra más de
+una posible solución, elegir un intervalo que le contenga solamente a una de las
+soluciones ).
+#tol: Tolerancia del ejercicio (debe ser condicionado en el enunciado).
+#n: Tope de iteraciones.
+
+#rutina:
+for i in range(n):
+ x2=(x1*f(x0)-x0*f(x1))/(f(x0)-f(x1))
+ err=np.abs(x2-x1)
+ relerr=np.abs(err/x2)
+ if tol>err or tol>relerr or tol>np.abs(f(x2)):
+   break
+ x0=x1
+ x1=x2
+###################################################
+################RUTINA009-Newton Rapson sistemas no lineales(multidimensional)##########################
+#
+#Qué hace: Resuelve un sistema de ecuaciones (sea el S.E lineal o no).
+#sistema(): Es el sistema de ecuación que se quiere resolver.
+#jacob_sist(): Es el jacobiano del sistema de ecuación que se quiere resolver.
+#P0: Punto de partida (debe ser condicionado en el ejercicio).
+#m: Cantidad máxima de iteraciones.
+
+#rutina:
+for i in range(m):
+    F = sistema(P0)
+    J = jacob_sist(P0)
+    deltaP = np.linalg.solve(J, -F)
+    P = P0 + deltaP
+    err = np.linalg.norm(P - P0)
+    relerr = err / np.linalg.norm(P)
+    F_norm = np.linalg.norm(sistema(P))
+    if tol > err or tol > relerr or tol > F_norm:
+        break
+    else:
+        P0 = P.copy()
+################RUTINA010-Coef. de correlacion##########################
+#
+#Qué hace: Halla el coeficiente de correlación de Pearson.
+#Qué necesita: Valores de predicción de las “y” que devuelve la función hallada por
+medio de mínimos cuadrados al evaluar las “x” de dato tabulados, la media de los valores
+de “y” de dato tabulados y la media de los valores de predicción de “y”.
+#rutina:
+def R2(y_data, y_pred):
+    y_mean = np.mean(y_data)
+    SS_res = np.sum((y_data - y_pred) ** 2)
+    SS_tot = np.sum((y_data - y_mean) ** 2)
+    return 1 - SS_res / SS_tot
+###################################################
+################RUTINA011-Interpolador directo##########################
+#
+#Qué hace: Halla un polinomio de grado "m-1".
+#m: Cantidad de elementos de los datos tabulados para hacer la interpolación.
+#Polinomio interpolador: p(x)= 𝑎0+𝑎1.𝑥1+𝑎2.𝑥2+...+𝑎𝑚−1.𝑥 (𝑚−1) es lo que se busca.
+#Datos tabulados: x e y=p(x) son datos tabulados que se evalúan en la expresión
+completa del polinomio interpolador para formar un sistema de ecuación.
+#c= [a0, a1, a2, ..., an]: Incógnitas a hallar.
+#Matriz de Vandermonde: Es la matriz de coeficientes del sistema de ecuación formado
+al evaluar los valores de x en la expresión del polinomio interpolador, así, cada fila
+contiene a las potencias de cada elemento del dato tabulado x.
+#v: Es la Matriz de Vandermonde en la rutina.
+
+#turina: 
+v=np.vander(x,N=m,increasing=True)
+a=np.linalg.solve(v,y)
+################RUTINA012-Interpolador de Lagrange##########################
+#
+#Qué hace: Halla un polinomio de grado "n-1".
+#n: Cantidad de elementos de los datos tabulados para hacer la interpolación
+#Polinomio interpolador: p(x)= 𝑎0+𝑎1.𝑥
+1+𝑎2.𝑥
+2+...+𝑎𝑛−1.𝑥
+(𝑛−1) es lo que se busca hallar.
+#Datos tabulados: x e y=p(x).
+#[an,…,a3,a2,a1]: incógnitas a hallar.
+#P: Contiene a los coeficientes del polinomio al terminar el ciclo de iteraciones.
+#Inicializaciónes: P=0.
+
+#rutina: 
+for i in range(n):
+ a=np.delete(np.arange(n),i)
+ p=np.poly1d([1,-x[a[0]]])
+ for j in range(1,n-1):
+  p=np.polymul(p,np.poly1d([1,-x[a[j]]]))
+ P+=y[i]*p/p(x[i])
+################RUTINA013-Interpolador de Newton##########################
+#
+#Qué hace: Halla un polinomio de grado "n-1".
+#n: Cantidad de elementos de los datos tabulados para hacer la interpolación
+#Polinomio interpolador: p(x)= 𝑎0+𝑎1.𝑥
+1+𝑎2.𝑥
+2+...+𝑎𝑛−1.𝑥
+(𝑛−1) es lo que se busca hallar.
+#Datos tabulados: x e y=p(x).
+#[an,…,a3,a2,a1]: incógnitas a hallar.
+#INICIALIZACIONES NECESARIAS PARA LA RUTINA:
+#p=np.poly1d([1,-x[0]])
+#a=0 #Puede ser cualquier valor, con tal de crear un espacio de memoria para "a"
+#P=np.poly1d([y[0]])
+
+#rutina: 
+for i in range(1,n):
+ a=(y[i]-P(x[i]))/p(x[i])
+ P+=a*p
+ p=np.polymul(p,np.poly1d([1,-x[i]]))
+###################################################
+################RUTINA014-Integración por trapecios.##########################
+#
+#Qué hace: Halla el área aproximada o el valor de la integral definida por medio de
+trapecios.
+#f: Función la cual se quiere hallar su área.
+#n: Cantidad de trapecios cuyas áreas se suman para tener el valor de la integral
+#A: Área que se va a hallar.
+#a y b: Límites de integración.
+#h: Altura del trapecio.
+
+#rutina:
+h=(b-a)/n
+A=0
+y=f(np.linspace(a,b,n+1))
+k=0
+while(k<n):
+    A+=(h/2)*(y[k]+y[k+1])
+    k+=1
+Modificación Integración por trapecios para datos tabulados:
+A=0
+k=0
+n=len(x)-1
+while(k<n):
+ h=x[k+1]-x[k]
+ A+=(h/2)*(y[k]+y[k+1])
+ k+=1
+################RUTINA015-Simpson 1/3##########################
+#
+#Qué hace: Halla el área aproximada o el valor de la integral definida por medio de
+polinomios de 2do grado.
+#f: Función la cual se quiere hallar su área.
+#A: Área que se va a hallar.
+#a y b: Límites de integración.
+#s: Cantidad de polinomios auxiliares de 2do grado para hallar la integral (se debe
+condicionar en el ejercicio).
+#n: Vale 2*s y es la cantidad de subintervalos ("n" siempre debe ser par).
+#h: Distancia entre subintervalos.
+
+#rutina:
+h=(b-a)/n
+A=0
+y=f(np.linspace(a,b,n+1))
+k=0
+while(k<n):
+    A+=(h/3)*(y[k]+4*y[k+1]+y[k+2])
+    k+=2
+Modificación Simpson 1/3 para datos tabulados:
+A=0
+k=0
+n=len(x)-1
+while(k<n):
+ h=x[k+1]-x[k]
+ A+=(h/3)*(y[k]+4*y[k+1]+y[k+2])
+ k+=
+################RUTINA016-Simpson 3/8 ##########################
+#
+#Qué hace: Halla el área aproximada o el valor de la integral definida por medio de
+polinomios de 3er grado.
+#f: Función la cual se quiere hallar su área.
+#A: Área que se va a hallar.
+#a y b: Límites de integración.
+#s: Cantidad de polinomios auxiliares de 3er grado para hallar la integral (se debe
+condicionar en el ejercicio).
+#n: Vale 3*s y es la cantidad de subintervalos ("n" siempre debe ser múltiplo de 3).
+#h: Distancia entre subintervalos
+#rutina:
+h=(b-a)/n
+A=0
+y=f(np.linspace(a,b,n+1))
+k=0
+while(k<n):
+    A+=(3*h/8)*(y[k]+3*y[k+1]+3*y[k+2]+y[k+3])
+    k+=3
+
+Modificación Simpson 3/8 para datos tabulados:
+A=0
+k=0
+n=len(x)-1
+while(k<n):
+ h=x[k+1]-x[k]
+ A+=(3*h/8)*(y[k]+3*y[k+1]+3*y[k+2]+y[k+3])
+ k+=3
+###################################################
+################RUTINA017- Derivadas progresivas##########################
+d1y=(f(x+h)-f(x))/h #1er orden
+d1y=(-3f(x)+4f(x+h)- f(x+2h))/(2*h) #2do orden
+d2y=(f(x+2h)-2f(x+h)+f(x))/h^2 
+d2y=(-f(x+3h)+4f(x+2h)-5 f(x+h)+2f(x))/h^2 
+d3y=(f(x+3h)-3f(x+2h)+3f(x+h)-f(x))/h^3 
+d3y=(-3f(x+4h)+14f(x+3h)-24f(x+2h)+18f(x+h)-5f(x))/(2*h^3 )
+################RUTINA018-Derivadas centradas.##########################
+d1y=(f(x+h)-f(x-h))/(2*h) #2do orden
+d1y=(-f(x+2h)+8f(x+h)-8f(x-h)+f(x-2h))/(12*h) #4to orden
+d2y=(f(x+h)-2f(x)+f(x-h))/h^2 
+d2y=(-f(x+2h)+16f(x+h)-30f(x)+16f(x-h)-f(x-2h))/(12*h^2 )
+d3y=(f(x+2h)-2f(x+h)+2f(x-h)-f(x-2h))/(2*h^3 )
+d3y=(-f(x+3h)+8f(x+2h)-13f(x+h)+13f(x-h)-8f(x-2h)+f(x-3h))/(8*h^3 )
+################RUTINA019-Derivadas regresivas##########################
+d1y=(f(x)-f(x-h))/h #1er orden
+d1y=(3f(x)-4f(x-h)+ f(x-2h))/(2*h) #2do orden
+d2y=(f(x)-2f(x-h)+f(x-2h))/h^2 
+d2y=(2f(x)-5 f(x-h)+4f(x-2h)-f(x-3h))/h^2 
+d3y=(f(x)-3f(x-h)+3f(x-2h)-f(x-3h))/h^3 
+d3y=(5f(x)-18f(x-h)+24f(x-2h)-14f(x-3h)+3f(x-4h))/(2*h^3 )
+###################################################
+################RUTINA020-Método de Euler##########################
+#
+#Qué hace: Resuelve una EDO de enésimo orden por método matricial utilizando la serie
+de Taylor desarrollando solo hasta la 1ra derivada.
+#𝒚𝟎: Vector de partida que empieza por el valor de la variable dependiente hasta el de la
+penúltima derivada, así 𝑦0= [𝑦0, 𝑦0′, 𝑦0′′,…, 𝑦0𝑛−1].
+#m: Cantidad de elementos del vector de partida 𝑦0.
+#f(x): Función perturbadora.
+#A: Matriz de coeficientes del sistema de ecuación que se forma al transformar cada
+derivada como una incógnita.
+#B: Vector columna que le contiene en su último elemento a la función perturbadora f(x) y
+siendo todos los demás elementos iguales a cero.
+#h: Paso de la variable independiente.
+#y: Vector solución buscado contiene a el valor numérico de la variable dependiente
+hasta el valor de penúltima derivada ( y=[y, y’, y’’,…,𝑦
+𝑛−1
+] ) al terminar el ciclo de
+iteraciones.
+#n: cantidad de pasos “h” a hacer para llegar a la solución buscada
+
+#rutina:
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x=x0
+for i in range(n):
+    dy=A(x)@y0+B(x)
+    y=y0+h*dy
+    y0=y.copy()
+    x+=h
+################RUTINA021-Método de Taylor##########################
+		########MANUAL##########
+#
+#Qué hace: Halla el valor numérico de una función a partir de sus derivadas y con un
+orden de error O(ℎ5) al desarrollar la serie de Taylor hasta el término de la 5ta derivada .En
+el caso de que se requiera otro orden de error, se debe modificar manualmente el código
+para agregar o disminuir las derivadas necesarias para obtener el orden de error deseado.
+#x0, y0: Puntos de partida de la variable independiente y dependiente respectivamente
+cuyos valores deben ser condicionados en el ejercicio.
+#dy, d2y, d3y, d4y, d5y: Derivadas de una función desconocida, la derivada de dato es
+“dy”, a partir de ésta se pueden obtener los siguientes hasta la enésima derivada cuando
+se quiere un orden de error O(ℎ𝑛).
+#h: Paso de la variable independiente.
+#n: Cantidad de pasos “h” necesarios para llegar al punto de interés.
+
+#rutina:
+def dy(x, y):
+    return ...
+def d2y(x, y):
+    # (dy)'_x + (dy)'_y * dy
+    return grad(dy, argnums=0)(x, y) + grad(dy, argnums=1)(x, y) * dy(x, y)
+def d3y(x, y):
+    # (dy)'_x + (dy)'_y * dy
+    return grad(d2y, argnums=0)(x, y) + grad(d2y, argnums=1)(x, y) * dy(x, y)
+def d4y(x, y):
+    # (dy)'_x + (dy)'_y * dy
+    return grad(d3y, argnums=0)(x, y) + grad(d3y, argnums=1)(x, y) * dy(x, y)
+def d5y(x, y):
+    # (dy)'_x + (dy)'_y * dy
+    return grad(d4y, argnums=0)(x, y) + grad(d4y, argnums=1)(x, y) * dy(x, y)
+for i in range(0, n):
+    f1  = dy(x0, y0)
+    f2  = d2y(x0, y0)
+    f3  = d3y(x0, y0)
+    f4  = d4y(x0, y0)
+    f5  = d5y(x0, y0)
+    y1  = y0 + f1*h + f2/2 * h**2+(f3*h**3)/6+(f4*h**4)/24+(f5*h**5)/120
+    x1  = x0 + h
+    y0  = y1
+    x0  = x1
+###########GENERALIZADO##############
+#
+#Qué hace: Misma funcionalidad que la declaración manual de Taylor a diferencia de
+que es una versión más compacta y automática.
+#f: Derivada de la función desconocida.
+#n: Cantidad de derivaciones necesarias de la función “f” para llegar al orden de error
+deseado. Por ejemplo, Si se quiere tener orden de error 𝑂(ℎ3) entonces se desarrolla
+hasta la 3ra derivada con n=2 ya que “f” es la primera derivada.
+#x0, y0: Puntos de partida de la variable independiente y dependiente respectivamente
+cuyos valores deben ser condicionados en el ejercicio.
+#h: Valor del paso de la variable independiente.
+#m: Cantidad de pasos “h” a hacer para llegar al punto de interés la cual se quiere saber
+su valor.
+#y_: Vector solución buscado contiene a el valor numérico de la variable dependiente.
+
+#rutina:
+df=[f]
+for i in range(n):
+    df.append(sp.diff(df[i],'x')+sp.diff(df[i],'y')*f)
+R=np.array(([y0]),dtype=float)
+x_=x0
+y_=y0
+for j in range(m):
+    for i in range(n+1):
+        y_+=df[i].subs({x:x_,y:y0})*h**(i+1)/math.factorial(i+1)
+    x_+=h
+    y0=y_
+################RUTINA022- Heun.##########################
+#
+#Qué hace: Resuelve una EDO de enésimo orden por método matricial utilizando el
+promedio de dos pendientes para el desarrollo de Taylor hasta la 1ra derivada.
+#𝒙𝟎: Valor de partida de la variable independiente (debe ser condicionado en el
+enunciado).
+#𝒚𝟎: Vector de partida que empieza por el valor de la variable dependiente hasta el de la
+penúltima derivada, así 𝑦0= [𝑦0, 𝑦0′, 𝑦0′′,…, 𝑦0𝑛−1].
+#f(x): Función perturbadora.
+#A: Matriz de coeficientes del sistema de ecuación que se forma al transformar cada
+derivada como una incógnita.
+#B: Vector columna que le contiene en su último elemento a la función perturbadora f(x) y
+siendo todos los demás elementos iguales a cero.
+#h: Paso de la variable independiente (debe ser condicionado en el enunciado).
+#y: Vector solución buscado contiene a el valor numérico de la variable dependiente
+hasta el valor de penúltima derivada ( y=[y, y’, y’’,…,𝑦𝑛−1] ) al terminar el ciclo de
+iteraciones.
+#n: cantidad de pasos “h” a hacer para llegar a la solución buscada.
+
+#rutina:
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x=x0
+for i in range(n):
+    dy1=A(x)@y0+B(x)
+    y1=y0+h*dy1
+    x+=h
+    dy2=A(x)@y1+B(x)
+    y=y0+(h/2)*(dy1+dy2)
+    y0=y.copy()
+################RUTINA023-Runge-kutta (Rk4)##########################
+#
+#Qué hace: Resuelve una EDO de enésimo orden por método matricial avanzando a
+mitad de paso (h/2) en vez de hacer un paso completo (h) devolviendo el resultado con un
+orden de error O(ℎ4).
+#𝒙𝟎: Valor de partida de la variable independiente (debe ser condicionado en el enunciado).
+#𝒚𝟎: Vector de partida que empieza por el valor de la variable dependiente hasta el de la
+penúltima derivada, así 𝑦0= [𝑦0, 𝑦0′, 𝑦0′′,…, 𝑦0𝑛−1].
+#f(x): Función perturbadora.
+#A: Matriz de coeficientes del sistema de ecuación que se forma al transformar cada
+derivada como una incógnita.
+#B: Vector columna que le contiene en su último elemento a la función perturbadora f(x) y
+siendo todos los demás elementos iguales a cero.
+#h: Paso de la variable independiente.
+#y: Vector solución buscado contiene a el valor numérico de la variable dependiente
+hasta el valor de penúltima derivada ( y=[y, y’, y’’,…,𝑦𝑛−1] ) al terminar el ciclo de
+iteraciones.
+#n: cantidad de pasos “h” a hacer para llegar a la solución buscada.
+
+#rutina: 
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x=x0
+for i in range(n):
+    dy0=A(x)@y0+B(x)
+    x+=h/2
+    y1=y0+(h/2)*dy0
+    dy1=A(x)@y1+B(x)
+    y2=y0+(h/2)*dy1
+    dy2=A(x)@y2+B(x)
+    x+=h/2
+    y3=y0+h*dy2
+    dy3=A(x)@y3+B(x)
+    y=y0+(h/6)*(dy0+2*dy1+2*dy2+dy3)
+    y0=y.copy()
+################RUTINA024-Maine Simpon##########################
+#
+#Qué hace: Resuelve una EDO de enésimo orden por método matricial con cuatro valores
+que pertenezcan a la solución (es decir y0,y1,y2,y3 ) de la ED (tener en cuenta que
+generalmente esos valores y1,y2,y3 deben ser calculados mediante otra metodología
+condicionada en el ejercicio).
+#x0: Valor de partida de la variable independiente (debe ser condicionado en el
+enunciado).
+#y0: Vector de partida que empieza por el valor de la variable dependiente hasta el de la
+penúltima derivada, así y0= [y0, y0′, y0′′,..., y0n−1].
+
+#f(x): Función perturbadora.
+#A: Matriz de coeficientes del sistema de ecuación que se forma al transformar cada
+derivada como una incógnita.
+#B: Vector columna que le contiene en su último elemento a la función perturbadora f(x) y
+siendo todos los demás elementos iguales a cero.
+#h: Paso de la variable independiente.
+#y: Vector solución buscado contiene a el valor numérico de la variable dependiente
+hasta el valor de penúltima derivada ( y=[y, y’, y’’,...,yn−1] ) al terminar el ciclo de
+
+iteraciones.
+#n: cantidad de pasos “h” a hacer para llegar a la solución buscada.
+#
+
+#rutina
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x1=x0+h
+x2=x1+h
+x3=x2+h
+for i in range(n):
+    dy1=A(x1)@y1+B(x1)#Evaluación de derivadas en cada punto obtenido (x1,x2...)
+    dy2=A(x2)@y2+B(x2)
+    dy3=A(x3)@y3+B(x3)
+    p=y0+(4/3)*h*(2*dy1-dy2+2*dy3)
+    x4=x3+h
+    dy4=A(x4)@p+B(x4)
+
+    y=y2+(h/3)*(dy2+4*dy3+dy4)#Linea principal para diferenciar a Milne con Hamming
+    
+    y0=y1.copy()
+    y1=y2.copy()
+    y2=y3.copy()
+    y3=y.copy()
+    x1=x2
+    x2=x3
+    x3=x4
+
+#OBSERVACIÓN: Valor de la última solución calculada en la iteración se encuentra en “y”
+
+################RUTINA025-Milne Simpson modificado.##########################
+#
+#Qué hace: Resuelve una EDO de enésimo orden por método matricial basado en un
+sistema predictor, modificador y corrector, necesitando cuatro valores que pertenezcan a
+la solución.
+#p: Es el predictor de la solución buscada.
+#mod: Es el modificador de la predicción.
+#y: Es el valor corregido (es decir, la solución real) de la predicción “p” mediante el
+modificador “mod”.
+#x0: Valor de partida de la variable independiente (debe ser condicionado en el
+enunciado).
+#y0: Vector de partida que empieza por el valor de la variable dependiente hasta el de la
+penúltima derivada, así y0= [y0, y0′, y0′′,..., y0n−1].
+
+#f(x): Función perturbadora.
+#A: Matriz de coeficientes del sistema de ecuación que se forma al transformar cada
+derivada como una incógnita.
+#B: Vector columna que le contiene en su último elemento a la función perturbadora f(x) y
+siendo todos los demás elementos iguales a cero.
+#h: Paso de la variable independiente.
+#n: cantidad de pasos “h” a hacer para llegar a la solución buscada
+#
+
+#rutina
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x1=x0+h
+x2=x1+h
+x3=x2+h
+for i in range(n):
+    dy1=A(x1)@y1+B(x1)
+    dy2=A(x2)@y2+B(x2)
+    dy3=A(x3)@y3+B(x3)
+    p=y0+(4/3)*h*(2*dy1-dy2+2*dy3)
+    if i>0:
+        mod=p+(28/29)*(y3-p0)
+    else: 
+        mod=p
+    x4=x3+h
+    dy4=A(x4)@mod+B(x4)
+    y=y2+(h/3)*(dy2+4*dy3+dy4)
+    y0=y1.copy()
+    y1=y2.copy()
+    y2=y3.copy()
+    y3=y.copy()
+    x1=x2
+    x2=x3
+    x3=x4
+    p0=p.copy()
+#OBSERVACIÓN: Valor de la última solución calculada en la iteración se encuentra en “y”
+
+################RUTINA026-Hamming.##########################
+#
+#Qué hace: Resuelve una EDO de enésimo orden por método matricial con cuatro valores
+que pertenezcan a la solución (es decir y0,y1,y2,y3 ) de la ED (tener en cuenta que
+generalmente esos valores y1,y2,y3 deben ser calculados mediante otra metodología
+condicionada en el ejercicio).
+#x0: Valor de partida de la variable independiente (debe ser condicionado en el
+enunciado).
+#y0: Vector de partida que empieza por el valor de la variable dependiente hasta el de la
+penúltima derivada, así y0= [y0, y0′, y0′′,..., y0n−1].
+
+#f(x): Función perturbadora.
+#A: Matriz de coeficientes del sistema de ecuación que se forma al transformar cada
+derivada como una incógnita.
+#B: Vector columna que le contiene en su último elemento a la función perturbadora f(x) y
+siendo todos los demás elementos iguales a cero.
+#h: Paso de la variable independiente.
+#y: Vector solución buscado contiene a el valor numérico de la variable dependiente
+hasta el valor de penúltima derivada ( y=[y, y’, y’’,...,yn−1] ) al terminar el ciclo de iteraciones.
+#n: Cantidad de pasos “h” a hacer para llegar a la solución buscada.
+#
+
+#rutina
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x1=x0+h
+x2=x1+h
+x3=x2+h
+for i in range(n):
+    dy1=A(x1)@y1+B(x1)
+    dy2=A(x2)@y2+B(x2)
+    dy3=A(x3)@y3+B(x3)
+    p=y0+(4/3)*h*(2*dy1-dy2+2*dy3)
+    x4=x3+h
+    dy4=A(x4)@p+B(x4)
+    y=(9*y3-y1)/8+(3/8)*h*(-dy2+2*dy3+dy4)
+    y0=y1.copy()
+    y1=y2.copy()
+    y2=y3.copy()
+    y3=y.copy()
+    x1=x2
+    x2=x3
+    x3=x4
+
+#OBSERVACIÓN: Valor de la última solución calculada en la iteración se encuentra en “y”
+
+################RUTINA027-Hamming modificado.##########################
+#
+#Qué hace: Resuelve una EDO de enésimo orden por método matricial basado en un
+sistema predictor, modificador y corrector, necesitando cuatro valores que pertenezcan a
+la solución.
+#x0: Valor de partida de la variable independiente (debe ser condicionado en el
+enunciado).
+#y0: Vector de partida que empieza por el valor de la variable dependiente hasta el de la
+penúltima derivada, así y0= [y0, y0′, y0′′,..., y0n−1].
+
+#f(x): Función perturbadora.
+#A: Matriz de coeficientes del sistema de ecuación que se forma al transformar cada
+derivada como una incógnita.
+#B: Vector columna que le contiene en su último elemento a la función perturbadora f(x) y
+siendo todos los demás elementos iguales a cero.
+#h: Paso de la variable independiente.
+#y: Vector solución buscado contiene a el valor numérico de la variable dependiente
+hasta el valor de penúltima derivada ( y=[y, y’, y’’,...,yn−1] ) al terminar el ciclo de iteraciones.
+#n: Cantidad de pasos “h” a hacer para llegar a la solución buscada.
+#
+
+#rutina
+m=len(y0)
+a=np.hstack((np.zeros((m-1,1)),np.eye((m-1))))
+A=lambda x:np.vstack((a,np.array(([...]),dtype=float)))
+B=lambda x:np.vstack((np.zeros((m-1,1)),np.array(([...]),dtype=float)))
+x1=x0+h
+x2=x1+h
+x3=x2+h
+R=y0.copy()
+R=np.hstack((R,y1))
+R=np.hstack((R,y2))
+R=np.hstack((R,y3))
+for i in range(n):
+    dy1=A(x1)@y1+B(x1)
+    dy2=A(x2)@y2+B(x2)
+    dy3=A(x3)@y3+B(x3)
+    p=y0+(4/3)*h*(2*dy1-dy2+2*dy3)
+    if i>0:
+       mod=p+(112/121)*(y3-p0)
+    else: 
+        mod=p
+    x4=x3+h
+    dy4=A(x4)@mod+B(x4)
+    y=(9*y3-y1)/8+(3/8)*h*(-dy2+2*dy3+dy4)
+    y0=y1.copy()
+    y1=y2.copy()
+    y2=y3.copy()
+    y3=y.copy()
+    x1=x2
+    x2=x3
+    x3=x4
+    p0=p.copy()
+
+#OBSERVACIÓN: Valor de la última solución calculada en la iteración se encuentra en “y”
+
+###################################################
