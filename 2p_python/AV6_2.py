@@ -41,7 +41,7 @@ def areaPorSimpson(a, b, n):
 
 
 # Areadada = Areaconocida + Areadek*K
-
+# Es como sacar una constante K de mi integral definida nomas, por eso despejo K
 # K = (Areadada - Areaconocida   )/Areadek
 
 Areadada = 100
