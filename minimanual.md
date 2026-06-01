@@ -181,9 +181,9 @@ P = np.poly1d([0])
 ### 013 – Newton
 
 ```python
-n = len(x)
-P = np.poly1d([y[0]])
-p = np.poly1d([1])
+p=np.poly1d([1,-x[0]])
+a=0 #Puede ser cualquier valor, con tal de crear un espacio de memoria para "a"
+P=np.poly1d([y[0]])
 ```
 
 > `n`: cantidad de puntos
@@ -270,6 +270,191 @@ h = x[1] - x[0]
 > `n`: cantidad de datos
 
 ---
+## Ecuaciones diferenciales ordinarias
+
+### Declaraciones comunes – Rutinas 020–027
+
+EDO lineal de orden `m`, despejada en su derivada mayor:
+
+```
+y^(m) = c0(x)·y + c1(x)·y' + ... + c_(m-1)(x)·y^(m-1) + g(x)
+```
+
+Declarar siempre:
+
+```python
+x0 = ...   # punto inicial
+h  = ...   # tamaño de paso
+n  = ...   # cantidad de iteraciones
+```
+
+Vector inicial (columna), con **tantas filas como el orden de la EDO**:
+
+```python
+y0 = np.array([
+    [y(x0)],
+    [y'(x0)],
+    [y''(x0)],
+    ...
+], dtype=float)
+m = len(y0)
+```
+
+> Para una EDO de orden `m` se necesitan exactamente `m` condiciones iniciales: `y(x0), y'(x0), ..., y^(m-1)(x0)`.
+
+---
+
+### Cómo rellenar `A` y `B`
+
+```python
+A = lambda x: np.vstack((a, np.array(([...]), dtype=float)))
+B = lambda x: np.vstack((np.zeros((m-1, 1)), np.array(([...]), dtype=float)))
+```
+
+- En `[...]` de `A`: coeficientes de `y, y', y'', ..., y^(m-1)` (en ese orden)
+- En `[...]` de `B`: término independiente `g(x)`
+
+**Ejemplo – tercer orden:** `y''' = -5y + 4y' - 2y'' + sin(x)`
+
+```python
+y0 = np.array([[y_0], [dy_0], [d2y_0]], dtype=float)
+
+A = lambda x: np.vstack((a, np.array(([-5, 4, -2]), dtype=float)))
+B = lambda x: np.vstack((np.zeros((m-1, 1)), np.array(([np.sin(x)]), dtype=float)))
+```
+
+**Ejemplo – primer orden:** `y' = k·y`
+
+```python
+y0 = np.array([[y_0]], dtype=float)
+
+A = lambda x: np.vstack((a, np.array(([k]), dtype=float)))
+B = lambda x: np.vstack((np.zeros((m-1, 1)), np.array(([0]), dtype=float)))
+```
+
+> Si la EDO tiene términos no lineales como `y²`, `y·y'` o `sin(y)`, estas plantillas pueden no ser válidas directamente.
+
+---
+
+### 020 – Euler
+
+- Método de un paso
+- Declarar `x0`, `y0`, `h`, `n` y completar `A`, `B`
+- `n`: pasos desde `x0` → último punto: `xf = x0 + n·h`
+
+```python
+n = int((xf - x0) / h)
+```
+
+---
+
+### 021 – Taylor
+
+- Para EDO escalar de primer orden: `y' = f(x, y)`
+- **No usa matrices `A` ni `B`**
+- Declarar `dy(x, y)` y las derivadas superiores mediante regla de la cadena total
+
+```python
+def dy(x, y):
+    return ...
+```
+
+- En la versión generalizada, distinguir:
+
+```python
+orden_taylor = ...  # cantidad de términos
+n_pasos      = ...  # avances en x
+```
+
+---
+
+### 022 – Heun
+
+- Método de un paso
+- Mismas declaraciones que Euler: `x0`, `y0`, `h`, `n` y completar `A`, `B`
+
+```python
+n = int((xf - x0) / h)
+```
+
+---
+
+### 023 – Runge-Kutta orden 4 (RK04)
+
+- Método de un paso
+- Mismas declaraciones que Euler y Heun
+- Frecuentemente usado para generar los valores iniciales de los métodos multipaso
+
+```python
+n = int((xf - x0) / h)
+```
+
+---
+
+### Valores iniciales para métodos multipaso (024–027)
+
+Requieren cuatro vectores iniciales consecutivos, normalmente generados con RK04:
+
+```python
+y0  # en x0
+y1  # en x0 + h
+y2  # en x0 + 2h
+y3  # en x0 + 3h
+
+x1 = x0 + h
+x2 = x1 + h
+x3 = x2 + h
+```
+
+- `n`: puntos **nuevos** calculados después de `y3`
+- Último punto: `xf = x0 + (3 + n)·h`
+
+```python
+n = int((xf - x0) / h) - 3
+```
+
+---
+
+### 024 – Milne-Simpson
+
+- Método multipaso predictor-corrector
+- Declarar `x0`, `h`, `n`, `y0`, `y1`, `y2`, `y3` y completar `A`, `B`
+
+---
+
+### 025 – Milne-Simpson modificado
+
+- Igual que 024
+- `p0` **no se declara** antes del bucle; la rutina lo guarda al final de la primera iteración
+
+---
+
+### 026 – Hamming
+
+- Método multipaso predictor-corrector
+- Declarar `x0`, `h`, `n`, `y0`, `y1`, `y2`, `y3` y completar `A`, `B`
+
+---
+
+### 027 – Hamming modificado
+
+- Igual que 026
+- `p0` **no se declara** antes del bucle; la rutina lo guarda al final de la primera iteración
+
+---
+
+### Resumen rápido
+
+| Rutina                         | Tipo      | Valores iniciales        | `n` representa                |
+|-------------------------------|-----------|--------------------------|-------------------------------|
+| 020 – Euler                   | Un paso   | `y0`                     | Pasos desde `x0`              |
+| 021 – Taylor                  | Un paso   | `y0`                     | Pasos desde `x0`              |
+| 022 – Heun                    | Un paso   | `y0`                     | Pasos desde `x0`              |
+| 023 – RK04                    | Un paso   | `y0`                     | Pasos desde `x0`              |
+| 024 – Milne-Simpson           | Multipaso | `y0`, `y1`, `y2`, `y3`   | Puntos nuevos después de `y3` |
+| 025 – Milne-Simpson mod.      | Multipaso | `y0`, `y1`, `y2`, `y3`   | Puntos nuevos después de `y3` |
+| 026 – Hamming                 | Multipaso | `y0`, `y1`, `y2`, `y3`   | Puntos nuevos después de `y3` |
+| 027 – Hamming mod.            | Multipaso | `y0`, `y1`, `y2`, `y3`   | Puntos nuevos después de `y3` |
 
 ## Observacion importante sobre `n`
 
