@@ -1,4 +1,4 @@
-# Resumen de Rutinas – Métodos Numéricos - EST. Mauricio Benitez
+# Resumen de Rutinas – Métodos Numéricos - 
 
 ---
 
