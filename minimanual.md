@@ -128,8 +128,8 @@ Definición correcta:
 def f(var):
     # var = coeficientes del modelo
     # ejemplo: var = [a, b]
-
-    model = var[1] / (x_dat + var[0])  # ejemplo de modelo
+    a,b = var #ejemplo
+    model = b / (x_dat + a)  # ejemplo de modelo
 
     return jnp.sum((model - y_dat) ** 2)
 ```
@@ -139,6 +139,8 @@ Derivadas:
 ```python
 sistema = grad(f)
 jacob_sist = hessian(f)
+Luego aplicamos Rutina 9, el vector P nos da a y b
+P[0] = a, P[1] = b
 ```
 
 Predicción y métricas:
