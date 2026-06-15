@@ -1,5 +1,6 @@
 import numpy as np
 
+print("gola")
 A = np.array(
     [[60, 8, 19, 11], [14, 65, 15, 12], [11, 17, 60, 12], [15, 10, 6, 65]], dtype=float
 )
