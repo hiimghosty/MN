@@ -1,27 +1,22 @@
 # Ejercicios de Métodos Numéricos
 
-En este repositorio voy subiendo los ejercicios prácticos e implementaciones de métodos numéricos que estoy trabajando en clase. Lo voy actualizando semana a semana conforme avanzamos, así que básicamente es un reflejo de mi progreso en la materia.
-
----
+Acá están los ejercicios prácticos y las implementaciones que fui haciendo durante la materia de Métodos Numéricos. Los empecé a subir semana a semana mientras cursaba y, ahora que ya la aprobé, dejo el repo tal cual quedó: un registro de todo lo que resolví, por si le sirve a alguien que esté pasando por lo mismo.
 
 ## Sobre el repositorio
 
-Actualmente estoy cursando la materia, así que este espacio también es parte de mi proceso de aprendizaje. Seguramente algunas implementaciones no serán perfectas en su primera versión (eso es parte del proceso), pero siempre procuro validar los resultados y mantener un buen nivel de rigor matemático, además de cuidar las buenas prácticas de programación.
+Todo esto lo fui armando mientras aprendía, así que no esperes código impecable en cada archivo: algunas soluciones salieron a la primera y otras las peleé bastante. Lo que sí traté de sostener siempre fue validar los resultados, no perder el rigor matemático y mantener el código lo más prolijo y entendible posible.
 
-La idea es aprender bien, no solo “hacer que funcione”. Si te gusta este enfoque y también buscas mejorar constantemente, eres más que bienvenido a contribuir, proponer mejoras o abrir issues.
+La idea nunca fue solo "que funcione", sino entender qué pasa detrás de cada método. Si estás cursando la materia y algo de esto te ayuda, buenísimo. Y si encontrás un error o se te ocurre una forma mejor de resolver algo, los *issues* y los *pull requests* están abiertos.
 
----
+## Bibliografía
 
-## Bibliografía recomendada
+Me apoyé sobre todo en estos dos libros:
 
-Para estudiar y resolver los ejercicios, me estoy apoyando principalmente en estos libros:
-
-- *Métodos Numéricos para Ingenieros* – Steven C. Chapra & Raymond P. Canale  
-- *Numerical Methods in Engineering with Python 3* – Jaan Kiusalaas (Cambridge University Press)
-
----
+- *Métodos Numéricos para Ingenieros* — Steven C. Chapra & Raymond P. Canale
+- *Numerical Methods in Engineering with Python 3* — Jaan Kiusalaas (Cambridge University Press)
 
 ## Contacto
-Si te interesa colaborar con este proyecto, o si tenes dudas o quejas, te dejo mi contacto.
 
-📩 Correo: mauriciobenitezp@fiuna.edu.py
+Si querés colaborar, tenés alguna duda, una queja, o encontraste algo que está mal y me lo querés avisar:
+
+📩 mauriciobenitezp@fiuna.edu.py
