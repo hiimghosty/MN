@@ -5,7 +5,8 @@ A = np.array(
     [[60, 8, 19, 11], [14, 65, 15, 12], [11, 17, 60, 12], [15, 10, 6, 65]], dtype=float
 )
 A = A / 100
-B = np.array([34, 52, 56, 59], dtype=float)
+B = np.array([[34], [52], [56], [59]], dtype=float)
+B=B.flatten()
 tol = 1e-2
 m = 50
 n = len(B)
