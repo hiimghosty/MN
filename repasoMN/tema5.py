@@ -23,7 +23,7 @@ def VolumenTotal(radio, altura):
 
 def lagrange(var):
     radio, altura, landa = var
-    return (CostoCilindro * AreaCilindro(radio, altura) + CostoSemiesfera * AreaSemiesfera(radio) + CostoBase * AreaBase(radio) + landa * (VolumenTotal(radio, altura) - VolumenMaximo))
+    return (CostoCilindro * AreaCilindro(radio, altura) + CostoSemiesfera * AreaSemiesfera(radio) + CostoBase * AreaBase(radio) - landa * (VolumenTotal(radio, altura) - VolumenMaximo))
 
 def costo(radio,altura):
     return (CostoCilindro * AreaCilindro(radio, altura) + CostoSemiesfera * AreaSemiesfera(radio) + CostoBase * AreaBase(radio))
